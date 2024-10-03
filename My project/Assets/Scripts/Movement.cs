@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 public class Movement : MonoBehaviour
 {
     [SerializeField] float playerSpeed = 1f;
+
+    private bool isTouchingRock = false;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +39,30 @@ public class Movement : MonoBehaviour
         if (moveRight)
         {
             this.gameObject.transform.Translate(Vector3.right * playerSpeed * Time.deltaTime);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "animal")
+        {
+            collision.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.tag == "rock")
+        {
+            isTouchingRock = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.tag == "rock")
+        {
+            isTouchingRock = false;
         }
     }
 }
