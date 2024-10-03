@@ -1,5 +1,7 @@
 # Tutorial-Level
 
+I have been making changes to the Scene called Tutorial_Level. We can ignore Sample_Scene for now.
+
 Made initial push to create project.
 
 Implemented simple 2D movement
