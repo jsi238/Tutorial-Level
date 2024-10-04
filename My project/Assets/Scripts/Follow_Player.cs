@@ -17,8 +17,8 @@ public class Follow_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(playerPos.position);
-        Debug.Log(this.transform.position);
+        //Debug.Log(playerPos.position);
+        //Debug.Log(this.transform.position);
         Vector3 newPos = new Vector3(playerPos.position.x, playerPos.position.y, this.transform.position.z);
         this.gameObject.transform.position = newPos;
     }
