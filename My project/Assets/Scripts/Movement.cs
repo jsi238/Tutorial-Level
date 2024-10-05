@@ -15,7 +15,7 @@ public class Movement : MonoBehaviour
     private bool isTouchingRock = false; //check if player is a touching rock
 
     /*check which direction their is an obstacle to stop movement in that direction */
-    private bool isTouchingRight = false; 
+    private bool isTouchingRight = false;
     private bool isTouchingLeft = false;
     private bool isTouchingUp = false;
     private bool isTouchingDown = false;
@@ -69,21 +69,20 @@ public class Movement : MonoBehaviour
             collision.gameObject.SetActive(false); //collect animals when touched
         }
 
-        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "fence") //detects player is touching a rock or fence
+        if (collision.gameObject.tag == "rock") //detects player is touching a rock or fence
         {
             rock = collision.gameObject;
-            Vector2 direction = collision.GetContact(0).normal;
-            /* determine if playing is making contact from above, below, left, or right */
-            if (direction.x == 1)
-                isTouchingLeft = true;
-            if (direction.x == -1)
-                isTouchingRight = true;
-            if (direction.y == 1)
-                isTouchingDown = true;
-            if (direction.y == -1)
-                isTouchingUp = true;
         }
-
+        Vector2 direction = collision.GetContact(0).normal;
+        /* determine if playing is making contact from above, below, left, or right */
+        if (direction.x == 1)
+            isTouchingLeft = true;
+        if (direction.x == -1)
+            isTouchingRight = true;
+        if (direction.y == 1)
+            isTouchingDown = true;
+        if (direction.y == -1)
+            isTouchingUp = true;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
@@ -95,6 +94,17 @@ public class Movement : MonoBehaviour
         {
             isTouchingRock = true; //check if player is actively touching rock      
         }
+
+        Vector2 direction = collision.GetContact(0).normal;
+        /* determine if playing is making contact from above, below, left, or right */
+        if (direction.x == 1)
+            isTouchingLeft = true;
+        if (direction.x == -1)
+            isTouchingRight = true;
+        if (direction.y == 1)
+            isTouchingDown = true;
+        if (direction.y == -1)
+            isTouchingUp = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
