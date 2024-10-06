@@ -1,8 +1,13 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Movement : MonoBehaviour
 {
     private Animator animator;
+    //[SerializeField] private AudioSource pigSound;
+    [SerializeField] private AudioSource cowSound;
+    [SerializeField] private AudioSource horseSound;
+
     [SerializeField] float playerSpeed = 1f; //create variable to set player speed
     private Vector2 movement; // vector for movement
     private Rigidbody2D rb;
@@ -11,6 +16,8 @@ public class Movement : MonoBehaviour
     private GameObject rock; //rock object to be removed when crushed
 
     private bool isTouchingRock = false; //check if player is a touching rock
+
+    private bool hasPick = false; //checks if player has collected a pickaxe upgrade
 
     // Start is called before the first frame update
     void Start()
@@ -31,12 +38,14 @@ public class Movement : MonoBehaviour
 
         /* check which key is pressed and if movement is impeded in that directions */
         if (moveUp) movement.y = 1;
-        if (moveDown ) movement.y = -1;
-        if (moveLeft ) {
+        if (moveDown) movement.y = -1;
+        if (moveLeft)
+        {
             movement.x = -1;
             facingRight = false;
         }
-        if (moveRight ) {
+        if (moveRight)
+        {
             movement.x = 1;
             facingRight = true;
         }
@@ -50,27 +59,42 @@ public class Movement : MonoBehaviour
 
         if (destroyRock && isTouchingRock)
         {
-            rock.SetActive(false); //'destory' rock in players way
+            if (rock.tag == "rock")
+            {
+                rock.SetActive(false); //'destory' rock in players way
+            }
+            else if (rock.tag == "strong rock" && hasPick == true)
+            {
+                rock.SetActive(false);
+            }
+
         }
 
         // animation
-        if (movement.x != 0 || movement.y != 0) {
+        if (movement.x != 0 || movement.y != 0)
+        {
             animator.SetFloat("X", movement.x);
             animator.SetFloat("Y", movement.y);
         }
         bool moving = moveRight || moveLeft || moveUp || moveDown;
 
-        if (moving) {
+        if (moving)
+        {
             animator.SetBool("isWalking", true);
-        } else {
+        }
+        else
+        {
             animator.SetBool("isWalking", false);
         }
 
         Vector3 theScale = transform.localScale;
-        if (facingRight) {
+        if (facingRight)
+        {
             if (theScale.x < 0) theScale.x *= -1;
             transform.localScale = theScale;
-        } else {
+        }
+        else
+        {
             if (theScale.x > 0) theScale.x *= -1;
             transform.localScale = theScale;
         }
@@ -80,10 +104,30 @@ public class Movement : MonoBehaviour
     {
         if (collision.gameObject.tag == "pig" || collision.gameObject.tag == "horse" || collision.gameObject.tag == "cow")
         {
+            if (collision.gameObject.tag == "pig")
+            {
+                //pigSound.Play();
+            }
+            else if (collision.gameObject.tag == "cow")
+            {
+                cowSound.Play();
+            }
+            else if (collision.gameObject.tag == "horse")
+            {
+                horseSound.Play();
+            }
+
             collision.gameObject.SetActive(false); //collect animals when touched
+
         }
 
-        if (collision.gameObject.tag == "rock") //detects player is touching a rock or fence
+        if (collision.gameObject.tag == "pickaxe upgrade")
+        {
+            hasPick = true;
+            collision.gameObject.SetActive(false);
+        }
+
+        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "strong rock") //detects player is touching a rock or fence
         {
             rb.velocity = Vector2.zero;
             rock = collision.gameObject;
@@ -96,7 +140,7 @@ public class Movement : MonoBehaviour
         // Vector2 collisionPos = new Vector2(collision.gameObject.transform.position.x, collision.gameObject.transform.position.y);
         // Vector2 playerPos = this.transform.position;
 
-        if (collision.gameObject.tag == "rock")
+        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "strong rock")
         {
             isTouchingRock = true; //check if player is actively touching rock
         }
@@ -104,7 +148,7 @@ public class Movement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "rock")
+        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "strong rock")
         {
             isTouchingRock = false; //check that player is no longer touching rock
         }

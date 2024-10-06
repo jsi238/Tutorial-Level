@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: -8531293743396628289}
   - component: {fileID: 5597853058433771414}
   m_Layer: 0
-  m_Name: Rock
-  m_TagString: rock
+  m_Name: Strong Rock
+  m_TagString: strong rock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 5554678054087714547}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.2074, y: -0.547, z: 0}
-  m_LocalScale: {x: 1.30524, y: 1.3140001, z: 1}
+  m_LocalPosition: {x: -12.1157, y: -0.646, z: 0}
+  m_LocalScale: {x: 1.4887568, y: 1.5118885, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1018311819, guid: 21f048aca67460941b6b7bd0992bca1a, type: 3}
+  m_Sprite: {fileID: 436615365, guid: 21f048aca67460941b6b7bd0992bca1a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

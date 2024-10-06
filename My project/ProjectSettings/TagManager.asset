@@ -11,6 +11,8 @@ TagManager:
   - house
   - fence
   - rock
+  - strong rock
+  - pickaxe upgrade
   layers:
   - Default
   - TransparentFX
