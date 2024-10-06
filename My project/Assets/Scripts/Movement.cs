@@ -62,8 +62,6 @@ public class Movement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("HeRE come dAt boi!");
-
         if (collision.gameObject.tag == "pig" || collision.gameObject.tag == "horse" || collision.gameObject.tag == "cow")
         {
             collision.gameObject.SetActive(false); //collect animals when touched
