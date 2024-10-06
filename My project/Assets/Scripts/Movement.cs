@@ -1,10 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.UI;
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 public class Movement : MonoBehaviour
 {
@@ -23,7 +17,6 @@ public class Movement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        animator.SetBool("Idle", true);
     }
 
     void Update()

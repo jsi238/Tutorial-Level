@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Play_Sound : MonoBehaviour
 {
@@ -27,7 +23,7 @@ public class Play_Sound : MonoBehaviour
     void Update()
     {
         timeSinceLastSound +=Time.deltaTime;
-        //if animal is 
+        //if animal is
         if (isVisible())
         {
             timeSinceLastSound = 0;
@@ -44,7 +40,7 @@ public class Play_Sound : MonoBehaviour
                 nearestPoint = new Vector3(nearestPoint.x, nearestPoint.y, 0);
                 //when playing sound, fire a sound wave from direction of sound
                 Instantiate(soundWave, nearestPoint, Quaternion.identity);
-                
+
                 //Sound wave should be angled towards the player and move briefly towards them
                 //might need its own script to do this
                 soundWave.transform.eulerAngles -= new Vector3(0, 0, angleToPlayer);
