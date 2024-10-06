@@ -45,6 +45,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3289876445
+    locked: 0
+  - name: Decorations
+    uniqueID: 3045453421
+    locked: 0
+  - name: Collision Objects
+    uniqueID: 1820910877
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Air Objects
+    uniqueID: 2650590809
     locked: 0

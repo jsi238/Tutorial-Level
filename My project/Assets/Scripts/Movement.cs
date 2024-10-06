@@ -94,6 +94,7 @@ public class Movement : MonoBehaviour
         {
             rb.velocity = Vector2.zero;
             rock = collision.gameObject;
+            Debug.Log("ROCKKCK");
         }
     }
 
