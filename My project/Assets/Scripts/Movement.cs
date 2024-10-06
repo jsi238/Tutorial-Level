@@ -8,7 +8,12 @@ using UnityEngine.UIElements.Experimental;
 
 public class Movement : MonoBehaviour
 {
+    private Animator animator;
     [SerializeField] float playerSpeed = 1f; //create variable to set player speed
+    private Vector2 movement; // vector for movement
+    private Rigidbody2D rb;
+    private bool idle = true;
+    private bool facingRight = true;
 
     private GameObject rock; //rock object to be removed when crushed
 
@@ -20,10 +25,13 @@ public class Movement : MonoBehaviour
     private bool isTouchingUp = false;
     private bool isTouchingDown = false;
 
+
     // Start is called before the first frame update
     void Start()
     {
-
+        rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        animator.SetBool("Idle", true);
     }
 
     // Update is called once per frame
@@ -38,25 +46,51 @@ public class Movement : MonoBehaviour
         bool destroyRock = Input.GetKeyDown(KeyCode.F);
 
         /* check which key is pressed and if movement is impeded in that directions */
-        if (moveUp && isTouchingUp == false)
-        {
-            this.gameObject.transform.Translate(Vector3.up * playerSpeed * Time.deltaTime);
+        if (moveUp && isTouchingUp == false) movement.y = 1;
+        if (moveDown && isTouchingDown == false) movement.y = -1;
+        if (moveLeft && isTouchingLeft == false) {
+            movement.x = -1;
+            facingRight = false;
         }
-        if (moveDown && isTouchingDown == false)
-        {
-            this.gameObject.transform.Translate(Vector3.down * playerSpeed * Time.deltaTime);
+        if (moveRight && isTouchingRight == false) {
+            movement.x = 1;
+            facingRight = true;
         }
-        if (moveLeft && isTouchingLeft == false)
-        {
-            this.gameObject.transform.Translate(Vector3.left * playerSpeed * Time.deltaTime);
-        }
-        if (moveRight && isTouchingRight == false)
-        {
-            this.gameObject.transform.Translate(Vector3.right * playerSpeed * Time.deltaTime);
-        }
+
+        if (!moveUp && !moveDown) movement.y = 0;
+        if (!moveLeft && !moveRight) movement.x = 0;
+
+        movement.Normalize();
+
+        rb.MovePosition(rb.position + movement * playerSpeed * Time.fixedDeltaTime);
+
         if (destroyRock && isTouchingRock)
         {
             rock.SetActive(false); //'destory' rock in players way
+        }
+
+        // animation
+        if (movement.x != 0 || movement.y != 0) {
+            animator.SetFloat("X", movement.x);
+            animator.SetFloat("Y", movement.y);
+        }
+        bool moving = moveRight || moveLeft || moveUp || moveDown;
+
+        if (moving) {
+            idle = false;
+            animator.SetBool("isWalking", true);
+        } else {
+            idle = true;
+            animator.SetBool("isWalking", false);
+        }
+
+        Vector3 theScale = transform.localScale;
+        if (facingRight) {
+            if (theScale.x < 0) theScale.x *= -1;
+            transform.localScale = theScale;
+        } else {
+            if (theScale.x > 0) theScale.x *= -1;
+            transform.localScale = theScale;
         }
     }
 
@@ -90,7 +124,7 @@ public class Movement : MonoBehaviour
 
         if (collision.gameObject.tag == "rock")
         {
-            isTouchingRock = true; //check if player is actively touching rock      
+            isTouchingRock = true; //check if player is actively touching rock
         }
 
         Vector2 direction = collision.GetContact(0).normal;
