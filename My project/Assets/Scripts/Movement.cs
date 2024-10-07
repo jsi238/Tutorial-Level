@@ -70,10 +70,10 @@ public class Movement : MonoBehaviour
     void Update()
     {
         /*maybe less typing to just do it this way */
-        bool moveUp = Input.GetKey(KeyCode.W);
-        bool moveDown = Input.GetKey(KeyCode.S);
-        bool moveLeft = Input.GetKey(KeyCode.A);
-        bool moveRight = Input.GetKey(KeyCode.D);
+        bool moveUp = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+        bool moveDown = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+        bool moveLeft = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+        bool moveRight = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
 
         if (collectedAnimals >= numAnimals[sceneNum])
         {
@@ -271,7 +271,7 @@ public class Movement : MonoBehaviour
 
     public void playStepSound()
     {
-        if (moving)
+        if (moving && !swingingPick)
         {
             stepSound.Play();
         }
