@@ -3,12 +3,19 @@ using UnityEngine;
 public class Play_Sound : MonoBehaviour
 {
     [SerializeField] public AudioSource animalSound;
-    [SerializeField] public GameObject player;
-    [SerializeField] public GameObject soundWave;
+    [SerializeField] public AudioSource dyingSound;
+    
+    public GameObject player;
+
+    [SerializeField] public Sprite deadAnimal;
 
     [SerializeField] float soundInterval = 5;
 
     float timeSinceLastSound = 0;
+    private int numCalls = 0;
+
+    private int TIME_TILL_STARVE = 5;
+    private bool isDead = false;
 
     float angleToPlayer;
     Vector3 nearestPoint;
@@ -22,7 +29,7 @@ public class Play_Sound : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timeSinceLastSound +=Time.deltaTime;
+        timeSinceLastSound += Time.deltaTime;
         //if animal is
         if (isVisible())
         {
@@ -30,22 +37,20 @@ public class Play_Sound : MonoBehaviour
         }
         else
         {
-            if (timeSinceLastSound >= soundInterval)
+            if (timeSinceLastSound >= soundInterval && !isDead)
             {
-                animalSound.enabled = true;
+                numCalls++;
                 animalSound.Play();
-                //Debug.Log("Playing sounds");
-                angleToPlayer = getDirectionToPlayer();
-                nearestPoint = nearestEdge();
-                nearestPoint = new Vector3(nearestPoint.x, nearestPoint.y, 0);
-                //when playing sound, fire a sound wave from direction of sound
-                //Instantiate(soundWave, nearestPoint, Quaternion.identity);
-
-                //Sound wave should be angled towards the player and move briefly towards them
-                //might need its own script to do this
-                soundWave.transform.eulerAngles -= new Vector3(0, 0, angleToPlayer);
                 timeSinceLastSound = 0;
             }
+        }
+
+        if (numCalls > TIME_TILL_STARVE)
+        {
+            dyingSound.Play();
+            this.gameObject.GetComponent<SpriteRenderer>().sprite = deadAnimal;
+            this.gameObject.transform.localScale = new Vector3(.5f, .5f, 0);
+            isDead = true;
         }
     }
 
@@ -62,19 +67,5 @@ public class Play_Sound : MonoBehaviour
         {
             return false;
         }
-    }
-
-    private float getDirectionToPlayer()
-    {
-        return Vector2.Angle(this.transform.position, player.transform.position);
-    }
-
-    private Vector3 nearestEdge()
-    {
-        Collider2D cameraBounds = Camera.main.GetComponent<BoxCollider2D>();
-        Collider2D animalBounds = this.GetComponent<Collider2D>();
-        Vector3 nearestEdge = cameraBounds.ClosestPoint(this.transform.position);
-
-        return nearestEdge;
     }
 }

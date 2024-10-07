@@ -1,9 +1,17 @@
 using System.Collections;
+using UnityEditor.Experimental.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class Movement : MonoBehaviour
 {
+    //player starting pos will be outside barn
+    //x = -2.29, y = 4
+    Vector2 startingPos = new Vector2(-2.29f, 4f);
+
+    private static int sceneNum = 0; //keep track of which scene the player is in
+
     private Animator animator;
     [SerializeField] private AudioSource pigSound;
     [SerializeField] private AudioSource cowSound;
@@ -14,6 +22,9 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource pickUpSound;
     [SerializeField] private AudioSource weakAxeSound;
 
+    private SpriteRenderer srBarn;
+    [SerializeField] private Sprite closedBarn;
+
     private readonly float speed = 7; //create variable to set player speed
     private Vector2 movement; // vector for movement
     private Rigidbody2D rb;
@@ -23,9 +34,15 @@ public class Movement : MonoBehaviour
 
     private bool isTouchingRock = false; //check if player is a touching rock
 
-    private bool hasUpgradedPick = false; //checks if player has collected a pickaxe upgrade
+    private bool hasGoldPick = false; //checks if player has collected gold pickaxe upgrade
+    private bool hasDiamondPick = false; //checks if player has collected diamond pickaxe upgrade
 
     private bool moving = false;
+
+    private bool isFull = false; //checks if all animals has been collected.
+
+    private int[] numAnimals = { 3, 10 }; //hard-coded number of animals in each level
+    private int collectedAnimals = 0;
 
     // these 3 variables are used to control the pickaxe animation and movement delay
     private bool swingingPick = false;
@@ -36,8 +53,13 @@ public class Movement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(numAnimals[sceneNum]);
+
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        srBarn = GameObject.Find("Barn").GetComponent<SpriteRenderer>();
+
+        this.transform.position = startingPos;
 
         InvokeRepeating("playStepSound", .001f, .3f);
         InvokeRepeating("playAxeSwing", .001f, 0);
@@ -53,7 +75,12 @@ public class Movement : MonoBehaviour
         bool swingPick = Input.GetKeyDown(KeyCode.Space);
 
 
-        if (swingPick)
+        if (collectedAnimals >= numAnimals[sceneNum])
+        {
+            srBarn.sprite = closedBarn;
+            isFull = true;
+        }
+        if (swingPick && !swingingPick && !moving)
         {
             swingingPick = true;
             playAxeSwing();
@@ -97,15 +124,20 @@ public class Movement : MonoBehaviour
         {
             if (rock.tag == "rock")
             {
-                rock.SetActive(false); //'destory' rock in players way
                 destroyRockSound.Play();
+                rock.SetActive(false); //'destory' rock in players way
             }
-            else if (rock.tag == "strong rock" && hasUpgradedPick == true)
+            else if (rock.tag == "gold rock" && hasGoldPick == true)
+            {
+                destroyRockSound.Play();
+                rock.SetActive(false);
+            }
+            else if (rock.tag == "strong rock" && hasDiamondPick == true)
             {
                 rock.SetActive(false);
                 destroyRockSound.Play();
             }
-            else if (rock.tag == "strong rock" && hasUpgradedPick == false)
+            else
             {
                 weakAxeSound.Play();
             }
@@ -153,8 +185,17 @@ public class Movement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.tag == "barn" && isFull == true)
+        {
+            sceneNum++;
+            SceneManager.LoadScene("Level 2"); //move to level 2 if all animals (even carcasses) have been collected
+        }
+
         if (collision.gameObject.tag == "pig" || collision.gameObject.tag == "horse" || collision.gameObject.tag == "cow")
         {
+            collectedAnimals++;
+            Debug.Log("Num collceted animals: " + collectedAnimals);
+            Debug.Log("Left to collect: " + (numAnimals[sceneNum] - collectedAnimals));
             if (collision.gameObject.tag == "pig")
             {
                 pigSound.Play();
@@ -172,15 +213,21 @@ public class Movement : MonoBehaviour
 
         }
 
-        if (collision.gameObject.tag == "pickaxe upgrade")
+        if (collision.gameObject.tag == "gold pick")
         {
-            hasUpgradedPick = true;
             pickUpSound.Play();
-            hasUpgradedPick = true;
+            hasGoldPick = true;
             collision.gameObject.SetActive(false);
         }
 
-        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "strong rock") //detects player is touching a rock or fence
+        if (collision.gameObject.tag == "diamond pick")
+        {
+            pickUpSound.Play();
+            hasDiamondPick = true;
+            collision.gameObject.SetActive(false);
+        }
+
+        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "gold rock" || collision.gameObject.tag == "strong rock") //detects player is touching a rock
         {
             rb.velocity = Vector2.zero;
             rock = collision.gameObject;
@@ -193,7 +240,7 @@ public class Movement : MonoBehaviour
         // Vector2 collisionPos = new Vector2(collision.gameObject.transform.position.x, collision.gameObject.transform.position.y);
         // Vector2 playerPos = this.transform.position;
 
-        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "strong rock")
+        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "gold rock" || collision.gameObject.tag == "strong rock")
         {
             isTouchingRock = true; //check if player is actively touching rock
         }
@@ -201,7 +248,7 @@ public class Movement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "strong rock")
+        if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "gold rock" || collision.gameObject.tag == "strong rock")
         {
             isTouchingRock = false; //check that player is no longer touching rock
         }

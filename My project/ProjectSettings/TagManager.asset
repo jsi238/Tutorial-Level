@@ -12,7 +12,10 @@ TagManager:
   - fence
   - rock
   - strong rock
-  - pickaxe upgrade
+  - gold rock
+  - diamond pick
+  - gold pick
+  - barn
   layers:
   - Default
   - TransparentFX
