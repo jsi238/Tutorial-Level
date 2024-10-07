@@ -74,17 +74,17 @@ public class Movement : MonoBehaviour
         bool moveDown = Input.GetKey(KeyCode.S);
         bool moveLeft = Input.GetKey(KeyCode.A);
         bool moveRight = Input.GetKey(KeyCode.D);
-        bool swingPick = Input.GetKeyDown(KeyCode.Space);
-
 
         if (collectedAnimals >= numAnimals[sceneNum])
         {
             srBarn.sprite = closedBarn;
+            doorCloseSound.volume = 1;
             doorCloseSound.Play();
             collectedAnimals = 0;
             isFull = true;
         }
-        if (swingPick && !swingingPick && !moving)
+
+        if (Input.GetKeyDown(KeyCode.Space) && !swingingPick)
         {
             swingingPick = true;
             playAxeSwing();
@@ -93,6 +93,7 @@ public class Movement : MonoBehaviour
         if (swingingPick)
         {
             swingingTime += Time.fixedDeltaTime;
+            Debug.Log(swingingTime);
             if (swingingTime > PICKAXE_ANIMATION_TIME)
             {
                 swingingTime = 0;
