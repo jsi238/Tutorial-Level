@@ -82,4 +82,9 @@ public class Play_Sound : MonoBehaviour
             return false;
         }
     }
+
+    public bool getIsDead()
+    {
+        return isDead;
+    }
 }

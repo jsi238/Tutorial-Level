@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor.Experimental.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -26,6 +25,7 @@ public class Movement : MonoBehaviour
 
     [SerializeField] private Image goldPick;
     [SerializeField] private Image bluePick;
+    //[SerializeField] private TextMesh gameOverText;
 
     private SpriteRenderer srBarn;
     [SerializeField] private Sprite closedBarn;
@@ -55,7 +55,7 @@ public class Movement : MonoBehaviour
     private bool endOfSwingAnimation = false;
     private double PICKAXE_ANIMATION_TIME = 2; // in seconds
 
-    private double NUM_LEVELS = 2;
+    private double NUM_LEVELS = 2; //numbers of levels in the game
 
     // Start is called before the first frame update
     void Start()
@@ -195,25 +195,33 @@ public class Movement : MonoBehaviour
         if (collision.gameObject.tag == "barn" && isFull == true)
         {
             sceneNum++;
+            if (sceneNum == NUM_LEVELS)
+            {
+                //gameOverText.gameObject.SetActive(true);
+            }
             SceneManager.LoadScene("Level 2"); //move to level 2 if all animals (even carcasses) have been collected
         }
 
         if (collision.gameObject.tag == "pig" || collision.gameObject.tag == "horse" || collision.gameObject.tag == "cow")
         {
             collectedAnimals++;
-            Debug.Log("Num collceted animals: " + collectedAnimals);
+            Debug.Log("Num collected animals: " + collectedAnimals);
             Debug.Log("Left to collect: " + (numAnimals[sceneNum] - collectedAnimals));
-            if (collision.gameObject.tag == "pig")
+            
+            if (collision.gameObject.GetComponent<Play_Sound>().getIsDead() == false)
             {
-                pigSound.Play();
-            }
-            else if (collision.gameObject.tag == "cow")
-            {
-                cowSound.Play();
-            }
-            else if (collision.gameObject.tag == "horse")
-            {
-                horseSound.Play();
+                if (collision.gameObject.tag == "pig")
+                {
+                    pigSound.Play();
+                }
+                else if (collision.gameObject.tag == "cow")
+                {
+                    cowSound.Play();
+                }
+                else if (collision.gameObject.tag == "horse")
+                {
+                    horseSound.Play();
+                }
             }
 
             collision.gameObject.SetActive(false); //collect animals when touched
