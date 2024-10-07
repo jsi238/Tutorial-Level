@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource cowSound;
     [SerializeField] private AudioSource horseSound;
 
-    [SerializeField] float playerSpeed = 1f; //create variable to set player speed
+    private readonly float speed = 10; //create variable to set player speed
     private Vector2 movement; // vector for movement
     private Rigidbody2D rb;
     private bool facingRight = true;
@@ -74,7 +74,7 @@ public class Movement : MonoBehaviour
 
         // can't move if swinging pickaxe
         if (!swingingPick)
-            rb.MovePosition(rb.position + movement * playerSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
 
         if (isTouchingRock && endOfSwingAnimation)
         {
