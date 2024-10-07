@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
-    //player starting pos will be outside barn
-    //x = -2.29, y = 4
-    Vector2 startingPos = new Vector2(-2.29f, 4f);
+    //player starting pos will be outside barn, cow is visible
+    //x = -7.92, y = 3.53
+    Vector2 startingPos = new Vector2(-7.92f, 3.53f);
 
     private static int sceneNum = 0; //keep track of which scene the player is in
 
@@ -22,6 +22,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource destroyRockSound;
     [SerializeField] private AudioSource pickUpSound;
     [SerializeField] private AudioSource weakAxeSound;
+    [SerializeField] private AudioSource doorCloseSound;
 
     [SerializeField] private Image goldPick;
     [SerializeField] private Image bluePick;
@@ -85,6 +86,8 @@ public class Movement : MonoBehaviour
         if (collectedAnimals >= numAnimals[sceneNum])
         {
             srBarn.sprite = closedBarn;
+            doorCloseSound.Play();
+            collectedAnimals = 0;
             isFull = true;
         }
         if (swingPick && !swingingPick && !moving)
