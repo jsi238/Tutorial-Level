@@ -6,10 +6,6 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
-    //player starting pos will be outside barn, cow is visible
-    //x = -7.92, y = 3.53
-    Vector2 startingPos = new Vector2(-7.92f, 3.53f);
-
     private static int sceneNum = 0; //keep track of which scene the player is in
 
     private Animator animator;
@@ -66,8 +62,6 @@ public class Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         srBarn = GameObject.Find("Barn").GetComponent<SpriteRenderer>();
-
-        this.transform.position = startingPos;
 
         InvokeRepeating("playStepSound", .001f, .3f);
         InvokeRepeating("playAxeSwing", .001f, 0);
@@ -210,7 +204,7 @@ public class Movement : MonoBehaviour
             collectedAnimals++;
             Debug.Log("Num collected animals: " + collectedAnimals);
             Debug.Log("Left to collect: " + (numAnimals[sceneNum] - collectedAnimals));
-            
+
             if (collision.gameObject.GetComponent<Play_Sound>().getIsDead() == false)
             {
                 if (collision.gameObject.tag == "pig")
