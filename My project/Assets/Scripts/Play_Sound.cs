@@ -39,7 +39,7 @@ public class Play_Sound : MonoBehaviour
                 nearestPoint = nearestEdge();
                 nearestPoint = new Vector3(nearestPoint.x, nearestPoint.y, 0);
                 //when playing sound, fire a sound wave from direction of sound
-                Instantiate(soundWave, nearestPoint, Quaternion.identity);
+                //Instantiate(soundWave, nearestPoint, Quaternion.identity);
 
                 //Sound wave should be angled towards the player and move briefly towards them
                 //might need its own script to do this
