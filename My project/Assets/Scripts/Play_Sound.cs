@@ -77,12 +77,4 @@ public class Play_Sound : MonoBehaviour
 
         return nearestEdge;
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Player")
-        {
-            animalSound.Play();
-        }
-    }
 }

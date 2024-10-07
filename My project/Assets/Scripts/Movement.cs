@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -11,6 +12,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource swingAxeSound;
     [SerializeField] private AudioSource destroyRockSound;
     [SerializeField] private AudioSource pickUpSound;
+    [SerializeField] private AudioSource weakAxeSound;
 
     private readonly float speed = 7; //create variable to set player speed
     private Vector2 movement; // vector for movement
@@ -23,6 +25,8 @@ public class Movement : MonoBehaviour
 
     private bool hasUpgradedPick = false; //checks if player has collected a pickaxe upgrade
 
+    private bool moving = false;
+
     // these 3 variables are used to control the pickaxe animation and movement delay
     private bool swingingPick = false;
     private double swingingTime = 0;
@@ -34,6 +38,9 @@ public class Movement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        InvokeRepeating("playStepSound", .001f, .3f);
+        InvokeRepeating("playAxeSwing", .001f, 0);
     }
 
     void Update()
@@ -43,14 +50,20 @@ public class Movement : MonoBehaviour
         bool moveDown = Input.GetKey(KeyCode.S);
         bool moveLeft = Input.GetKey(KeyCode.A);
         bool moveRight = Input.GetKey(KeyCode.D);
+        bool swingPick = Input.GetKeyDown(KeyCode.Space);
 
-        if( Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) ) {
+
+        if (swingPick)
+        {
             swingingPick = true;
+            playAxeSwing();
         }
 
-        if (swingingPick) {
+        if (swingingPick)
+        {
             swingingTime += Time.fixedDeltaTime;
-            if (swingingTime > PICKAXE_ANIMATION_TIME) {
+            if (swingingTime > PICKAXE_ANIMATION_TIME)
+            {
                 swingingTime = 0;
                 swingingPick = false;
                 endOfSwingAnimation = true;
@@ -80,10 +93,6 @@ public class Movement : MonoBehaviour
         if (!swingingPick)
             rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
 
-        if (destroyRock)
-        {
-            swingAxeSound.Play();
-        }
         if (isTouchingRock && endOfSwingAnimation)
         {
             if (rock.tag == "rock")
@@ -96,6 +105,10 @@ public class Movement : MonoBehaviour
                 rock.SetActive(false);
                 destroyRockSound.Play();
             }
+            else if (rock.tag == "strong rock" && hasUpgradedPick == false)
+            {
+                weakAxeSound.Play();
+            }
         }
 
         if (movement.x != 0 || movement.y != 0)
@@ -103,25 +116,23 @@ public class Movement : MonoBehaviour
             animator.SetFloat("X", movement.x);
             animator.SetFloat("Y", movement.y);
         }
-        bool moving = moveRight || moveLeft || moveUp || moveDown;
+        moving = moveRight || moveLeft || moveUp || moveDown;
 
         if (moving)
         {
             animator.SetBool("isWalking", true);
-            if (stepSound.isPlaying == false)
-            {
-                stepSound.Play();
-            }
         }
         else
         {
-            stepSound.Pause();
             animator.SetBool("isWalking", false);
         }
 
-        if (swingingPick) {
+        if (swingingPick)
+        {
             animator.SetBool("swingingPickaxe", true);
-        } else {
+        }
+        else
+        {
             animator.SetBool("swingingPickaxe", false);
         }
 
@@ -163,7 +174,7 @@ public class Movement : MonoBehaviour
 
         if (collision.gameObject.tag == "pickaxe upgrade")
         {
-            hasPick = true;
+            hasUpgradedPick = true;
             pickUpSound.Play();
             hasUpgradedPick = true;
             collision.gameObject.SetActive(false);
@@ -193,6 +204,22 @@ public class Movement : MonoBehaviour
         if (collision.gameObject.tag == "rock" || collision.gameObject.tag == "strong rock")
         {
             isTouchingRock = false; //check that player is no longer touching rock
+        }
+    }
+
+    public void playStepSound()
+    {
+        if (moving)
+        {
+            stepSound.Play();
+        }
+    }
+
+    public void playAxeSwing()
+    {
+        if (swingingPick)
+        {
+            swingAxeSound.Play();
         }
     }
 }
