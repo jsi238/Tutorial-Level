@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 6876728834248054113}
   - component: {fileID: -4102027918724194762}
   - component: {fileID: -5769042615084109813}
+  - component: {fileID: 4368905663380445534}
+  - component: {fileID: -8127675878928670100}
   m_Layer: 0
   m_Name: Cow
   m_TagString: cow
@@ -31,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 2522139368486888774}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -18.05, y: 4.09, z: 0}
+  m_LocalPosition: {x: -18.92, y: 3.73, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -133,16 +135,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.125, y: 0.75}
-      - {x: -0.625, y: 0.75}
-      - {x: -0.8125, y: 0.5}
-      - {x: -0.8125, y: -0.1875}
-      - {x: -0.5, y: -0.6875}
-      - {x: 0.5, y: -0.6875}
-      - {x: 0.8125, y: -0.625}
-      - {x: 0.9375, y: -0.25}
-      - {x: 0.9375, y: -0.0625}
-      - {x: 0.625, y: 0.5}
+    - - {x: 0.84061813, y: -0.025712013}
+      - {x: 0, y: 0.8427682}
+      - {x: -0.86493874, y: -0.001140058}
+      - {x: 0.024475098, y: -0.90795463}
   m_UseDelaunayMesh: 0
 --- !u!50 &8135680003105878491
 Rigidbody2D:
@@ -187,7 +183,7 @@ MonoBehaviour:
   dyingSound: {fileID: -5769042615084109813}
   player: {fileID: 0}
   deadAnimal: {fileID: 21300000, guid: 5d6951fbe01b64e4abfe440c0bb882ee, type: 3}
-  soundInterval: 5
+  soundInterval: 7
 --- !u!82 &-4102027918724194762
 AudioSource:
   m_ObjectHideFlags: 0
@@ -208,7 +204,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 0.85623693
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -380,3 +376,36 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &4368905663380445534
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2522139368486888774}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 62ffb7a564de325419b262603294944a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-8127675878928670100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2522139368486888774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2740daf4e06a94243bdb9e97c4b72bef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

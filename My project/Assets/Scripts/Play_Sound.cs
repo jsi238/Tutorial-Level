@@ -4,8 +4,10 @@ public class Play_Sound : MonoBehaviour
 {
     [SerializeField] public AudioSource animalSound;
     [SerializeField] public AudioSource dyingSound;
-    
+
     public GameObject player;
+
+    private Animator animator;
 
     [SerializeField] public Sprite deadAnimal;
 
@@ -14,15 +16,21 @@ public class Play_Sound : MonoBehaviour
     float timeSinceLastSound = 0;
     private int numCalls = 0;
 
-    private int TIME_TILL_STARVE = 5;
-    private bool isDead = false;
+    [SerializeField] private int TIME_TILL_STARVE = 5;
 
-    float angleToPlayer;
-    Vector3 nearestPoint;
+    private bool isDead = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (this.GetComponent<Animator>() != null)
+        {
+            animator = this.GetComponent<Animator>();
+        }
+        else
+        {
+            animator = null;
+        }
         player = GameObject.Find("Player"); //locate player object
     }
 
@@ -40,17 +48,23 @@ public class Play_Sound : MonoBehaviour
             if (timeSinceLastSound >= soundInterval && !isDead)
             {
                 numCalls++;
-                animalSound.Play();
+                if (numCalls > TIME_TILL_STARVE)
+                {
+                    isDead = true;
+                    if (animator != null)
+                    {
+                        animator.enabled = false;
+                    }
+                    dyingSound.Play();
+                    this.gameObject.GetComponent<SpriteRenderer>().sprite = deadAnimal;
+                    this.gameObject.transform.localScale = new Vector3(.5f, .5f, 0);
+                }
+                else
+                {
+                    animalSound.Play();
+                }
                 timeSinceLastSound = 0;
             }
-        }
-
-        if (numCalls > TIME_TILL_STARVE)
-        {
-            dyingSound.Play();
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = deadAnimal;
-            this.gameObject.transform.localScale = new Vector3(.5f, .5f, 0);
-            isDead = true;
         }
     }
 

@@ -3,6 +3,7 @@ using UnityEditor.Experimental.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class Movement : MonoBehaviour
     private static int sceneNum = 0; //keep track of which scene the player is in
 
     private Animator animator;
+
     [SerializeField] private AudioSource pigSound;
     [SerializeField] private AudioSource cowSound;
     [SerializeField] private AudioSource horseSound;
@@ -21,6 +23,9 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource destroyRockSound;
     [SerializeField] private AudioSource pickUpSound;
     [SerializeField] private AudioSource weakAxeSound;
+
+    [SerializeField] private Image goldPick;
+    [SerializeField] private Image bluePick;
 
     private SpriteRenderer srBarn;
     [SerializeField] private Sprite closedBarn;
@@ -49,6 +54,8 @@ public class Movement : MonoBehaviour
     private double swingingTime = 0;
     private bool endOfSwingAnimation = false;
     private double PICKAXE_ANIMATION_TIME = 2; // in seconds
+
+    private double NUM_LEVELS = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -217,6 +224,7 @@ public class Movement : MonoBehaviour
         {
             pickUpSound.Play();
             hasGoldPick = true;
+            goldPick.gameObject.SetActive(true);
             collision.gameObject.SetActive(false);
         }
 
@@ -224,6 +232,7 @@ public class Movement : MonoBehaviour
         {
             pickUpSound.Play();
             hasDiamondPick = true;
+            bluePick.gameObject.SetActive(true);
             collision.gameObject.SetActive(false);
         }
 

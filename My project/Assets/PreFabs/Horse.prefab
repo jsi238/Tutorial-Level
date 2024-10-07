@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 8141096245573134851}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.23, y: 2.76, z: 0}
+  m_LocalPosition: {x: 12.78, y: 5.05, z: 0}
   m_LocalScale: {x: 0.125, y: 0.125, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -177,7 +177,7 @@ MonoBehaviour:
   dyingSound: {fileID: 8671947869524647434}
   player: {fileID: 0}
   deadAnimal: {fileID: 21300000, guid: 5d6951fbe01b64e4abfe440c0bb882ee, type: 3}
-  soundInterval: 7
+  soundInterval: 10
 --- !u!82 &3210740750008363206
 AudioSource:
   m_ObjectHideFlags: 0
