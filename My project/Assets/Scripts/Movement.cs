@@ -12,7 +12,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource destroyRockSound;
     [SerializeField] private AudioSource pickUpSound;
 
-    [SerializeField] float playerSpeed = 1f; //create variable to set player speed
+    private readonly float speed = 7; //create variable to set player speed
     private Vector2 movement; // vector for movement
     private Rigidbody2D rb;
     private bool facingRight = true;
@@ -21,7 +21,13 @@ public class Movement : MonoBehaviour
 
     private bool isTouchingRock = false; //check if player is a touching rock
 
-    private bool hasPick = false; //checks if player has collected a pickaxe upgrade
+    private bool hasUpgradedPick = false; //checks if player has collected a pickaxe upgrade
+
+    // these 3 variables are used to control the pickaxe animation and movement delay
+    private bool swingingPick = false;
+    private double swingingTime = 0;
+    private bool endOfSwingAnimation = false;
+    private double PICKAXE_ANIMATION_TIME = 2; // in seconds
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +44,18 @@ public class Movement : MonoBehaviour
         bool moveLeft = Input.GetKey(KeyCode.A);
         bool moveRight = Input.GetKey(KeyCode.D);
 
-        bool destroyRock = Input.GetKeyDown(KeyCode.F);
+        if( Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) ) {
+            swingingPick = true;
+        }
+
+        if (swingingPick) {
+            swingingTime += Time.fixedDeltaTime;
+            if (swingingTime > PICKAXE_ANIMATION_TIME) {
+                swingingTime = 0;
+                swingingPick = false;
+                endOfSwingAnimation = true;
+            }
+        }
 
         /* check which key is pressed and if movement is impeded in that directions */
         if (moveUp) movement.y = 1;
@@ -59,30 +76,28 @@ public class Movement : MonoBehaviour
 
         movement.Normalize();
 
-        rb.MovePosition(rb.position + movement * playerSpeed * Time.fixedDeltaTime);
+        // can't move if swinging pickaxe
+        if (!swingingPick)
+            rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
 
         if (destroyRock)
         {
             swingAxeSound.Play();
         }
-            
-
-        if (destroyRock && isTouchingRock)
+        if (isTouchingRock && endOfSwingAnimation)
         {
             if (rock.tag == "rock")
             {
                 rock.SetActive(false); //'destory' rock in players way
                 destroyRockSound.Play();
             }
-            else if (rock.tag == "strong rock" && hasPick == true)
+            else if (rock.tag == "strong rock" && hasUpgradedPick == true)
             {
                 rock.SetActive(false);
                 destroyRockSound.Play();
             }
-
         }
 
-        // animation
         if (movement.x != 0 || movement.y != 0)
         {
             animator.SetFloat("X", movement.x);
@@ -104,6 +119,12 @@ public class Movement : MonoBehaviour
             animator.SetBool("isWalking", false);
         }
 
+        if (swingingPick) {
+            animator.SetBool("swingingPickaxe", true);
+        } else {
+            animator.SetBool("swingingPickaxe", false);
+        }
+
         Vector3 theScale = transform.localScale;
         if (facingRight)
         {
@@ -115,6 +136,8 @@ public class Movement : MonoBehaviour
             if (theScale.x > 0) theScale.x *= -1;
             transform.localScale = theScale;
         }
+
+        endOfSwingAnimation = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -142,6 +165,7 @@ public class Movement : MonoBehaviour
         {
             hasPick = true;
             pickUpSound.Play();
+            hasUpgradedPick = true;
             collision.gameObject.SetActive(false);
         }
 
