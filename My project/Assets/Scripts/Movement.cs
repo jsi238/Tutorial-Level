@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource cowSound;
     [SerializeField] private AudioSource horseSound;
 
-    private readonly float speed = 10; //create variable to set player speed
+    private readonly float speed = 7; //create variable to set player speed
     private Vector2 movement; // vector for movement
     private Rigidbody2D rb;
     private bool facingRight = true;
