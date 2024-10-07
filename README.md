@@ -18,3 +18,4 @@ Upgradable items
 Sound effects and sound wave animation to show direction to head to find animals
 
 Assets from: [Cute fantasy rpg](https://kenmi-art.itch.io/cute-fantasy-rpg)
+Pickaxes are taken from minecraft gold and diamond pickaxe

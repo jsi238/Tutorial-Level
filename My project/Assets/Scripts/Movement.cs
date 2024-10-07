@@ -18,6 +18,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private AudioSource destroyRockSound;
     [SerializeField] private AudioSource pickUpSound;
     [SerializeField] private AudioSource weakAxeSound;
+    [SerializeField] private AudioSource doorCloseSound;
 
     [SerializeField] private Image goldPick;
     [SerializeField] private Image bluePick;
@@ -79,6 +80,8 @@ public class Movement : MonoBehaviour
         if (collectedAnimals >= numAnimals[sceneNum])
         {
             srBarn.sprite = closedBarn;
+            doorCloseSound.Play();
+            collectedAnimals = 0;
             isFull = true;
         }
         if (swingPick && !swingingPick && !moving)
