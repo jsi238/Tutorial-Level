@@ -4,9 +4,13 @@ using UnityEngine.Rendering;
 public class Movement : MonoBehaviour
 {
     private Animator animator;
-    //[SerializeField] private AudioSource pigSound;
+    [SerializeField] private AudioSource pigSound;
     [SerializeField] private AudioSource cowSound;
     [SerializeField] private AudioSource horseSound;
+    [SerializeField] private AudioSource stepSound;
+    [SerializeField] private AudioSource swingAxeSound;
+    [SerializeField] private AudioSource destroyRockSound;
+    [SerializeField] private AudioSource pickUpSound;
 
     private readonly float speed = 7; //create variable to set player speed
     private Vector2 movement; // vector for movement
@@ -76,15 +80,21 @@ public class Movement : MonoBehaviour
         if (!swingingPick)
             rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
 
+        if (destroyRock)
+        {
+            swingAxeSound.Play();
+        }
         if (isTouchingRock && endOfSwingAnimation)
         {
             if (rock.tag == "rock")
             {
                 rock.SetActive(false); //'destory' rock in players way
+                destroyRockSound.Play();
             }
             else if (rock.tag == "strong rock" && hasUpgradedPick == true)
             {
                 rock.SetActive(false);
+                destroyRockSound.Play();
             }
         }
 
@@ -98,9 +108,14 @@ public class Movement : MonoBehaviour
         if (moving)
         {
             animator.SetBool("isWalking", true);
+            if (stepSound.isPlaying == false)
+            {
+                stepSound.Play();
+            }
         }
         else
         {
+            stepSound.Pause();
             animator.SetBool("isWalking", false);
         }
 
@@ -131,7 +146,7 @@ public class Movement : MonoBehaviour
         {
             if (collision.gameObject.tag == "pig")
             {
-                //pigSound.Play();
+                pigSound.Play();
             }
             else if (collision.gameObject.tag == "cow")
             {
@@ -148,6 +163,8 @@ public class Movement : MonoBehaviour
 
         if (collision.gameObject.tag == "pickaxe upgrade")
         {
+            hasPick = true;
+            pickUpSound.Play();
             hasUpgradedPick = true;
             collision.gameObject.SetActive(false);
         }
