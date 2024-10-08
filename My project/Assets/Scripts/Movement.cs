@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
-    private static int sceneNum = 0; //keep track of which scene the player is in
-
     private Animator animator;
 
     [SerializeField] private AudioSource pigSound;
@@ -43,7 +41,7 @@ public class Movement : MonoBehaviour
 
     private bool isFull = false; //checks if all animals has been collected.
 
-    private int[] numAnimals = { 3, 10 }; //hard-coded number of animals in each level
+    private int[] numAnimals = { 3, 10, 1 }; //hard-coded number of animals in each level
     private int collectedAnimals = 0;
 
     // these 3 variables are used to control the pickaxe animation and movement delay
@@ -52,12 +50,12 @@ public class Movement : MonoBehaviour
     private bool endOfSwingAnimation = false;
     private double PICKAXE_ANIMATION_TIME = 2; // in seconds
 
-    private double NUM_LEVELS = 2; //numbers of levels in the game
+    private string sceneName;
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(numAnimals[sceneNum]);
+        sceneName = SceneManager.GetActiveScene().name;;
 
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -69,13 +67,15 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(sceneName);
+
         /*maybe less typing to just do it this way */
         bool moveUp = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
         bool moveDown = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
         bool moveLeft = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
         bool moveRight = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
 
-        if (collectedAnimals >= numAnimals[sceneNum])
+        if (collectedAnimals >= numAnimals[SceneManager.GetActiveScene().buildIndex])
         {
             srBarn.sprite = closedBarn;
             doorCloseSound.volume = 1;
@@ -192,19 +192,19 @@ public class Movement : MonoBehaviour
     {
         if (collision.gameObject.tag == "barn" && isFull == true)
         {
-            sceneNum++;
-            if (sceneNum == NUM_LEVELS)
+            if (sceneName.Equals("Tutorial_Project"))
             {
-                //gameOverText.gameObject.SetActive(true);
+                SceneManager.LoadScene("Level 2"); //move to level 2 if all animals (even carcasses) have been collected
             }
-            SceneManager.LoadScene("Level 2"); //move to level 2 if all animals (even carcasses) have been collected
+            if (sceneName.Equals("Level 2"))
+            {
+                SceneManager.LoadScene("Game Over");
+            }
         }
 
         if (collision.gameObject.tag == "pig" || collision.gameObject.tag == "horse" || collision.gameObject.tag == "cow")
         {
             collectedAnimals++;
-            Debug.Log("Num collected animals: " + collectedAnimals);
-            Debug.Log("Left to collect: " + (numAnimals[sceneNum] - collectedAnimals));
 
             if (collision.gameObject.GetComponent<Play_Sound>().getIsDead() == false)
             {

@@ -1,4 +1,6 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Play_Sound : MonoBehaviour
 {
@@ -20,9 +22,13 @@ public class Play_Sound : MonoBehaviour
 
     private bool isDead = false;
 
+    private string sceneName;
+
     // Start is called before the first frame update
     void Start()
     {
+        sceneName = SceneManager.GetActiveScene().name;
+
         if (this.GetComponent<Animator>() != null)
         {
             animator = this.GetComponent<Animator>();
@@ -48,7 +54,7 @@ public class Play_Sound : MonoBehaviour
             if (timeSinceLastSound >= soundInterval && !isDead)
             {
                 numCalls++;
-                if (numCalls > TIME_TILL_STARVE)
+                if (numCalls > TIME_TILL_STARVE && sceneName != "Tutorial_Project")
                 {
                     isDead = true;
                     if (animator != null)

@@ -34671,6 +34671,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Barn
       objectReference: {fileID: 0}
+    - target: {fileID: 1535557048734518959, guid: c1a944ad1f5d2974695fd460bc48253d, type: 3}
+      propertyPath: m_TagString
+      value: barn
+      objectReference: {fileID: 0}
     - target: {fileID: 5810658406629767842, guid: c1a944ad1f5d2974695fd460bc48253d, type: 3}
       propertyPath: m_LocalScale.x
       value: 2
